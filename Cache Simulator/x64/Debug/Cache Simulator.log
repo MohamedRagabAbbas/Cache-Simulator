@@ -1,0 +1,5 @@
+﻿  Cache Simulator.cpp
+D:\Semesters\Spring2023\Assembly\Cache Simulator\Cache Simulator\Cache Simulator.cpp(43,39): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Semesters\Spring2023\Assembly\Cache Simulator\Cache Simulator\Cache Simulator.cpp(88,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Semesters\Spring2023\Assembly\Cache Simulator\Cache Simulator\Cache Simulator.cpp(89,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Cache Simulator.vcxproj -> D:\Semesters\Spring2023\Assembly\Cache Simulator\x64\Debug\Cache Simulator.exe

@@ -12,7 +12,6 @@ string fileName;
 vector<int>accessSequence;
 // blockSize= cacheSize/numberLines;
 
-
 void print2DVector(vector<vector<int>>& matrix) {
     for (const auto& row : matrix) {
         for (const auto& element : row) {
@@ -23,17 +22,30 @@ void print2DVector(vector<vector<int>>& matrix) {
     cout<< endl << endl<< endl;
 }
 
-string intToBinaryString(int number,int bits) {
+void print(vector<string>& cache) {
+    for (int i = 0; i < cache.size(); i++)
+        cout << cache[i] << endl;
+}
+
+void printCache(string binary, int lineBits, int blockBits, bool hit) {
+    
+    cout << setw(5) << binary.substr(0, 32 - lineBits - blockBits) << setw(10)
+        << binary.substr(32 - lineBits - blockBits, lineBits) << setw(10)
+        << binary.substr(32 - blockBits);
+    string b = hit ? "hit" : "miss";
+    cout << setw(10) << b << endl<< endl;
+}
+string intToBinaryString(int number) {
     if (number == 0) {
-        return "0";
+        return string(32, '0');
     }
     string binary;
     while (number > 0) {
         binary = to_string(number % 2) + binary;
         number /= 2;
     }
-   /* while (bits < binary.length())
-        binary = '0' + binary;*/
+    // Extend the binary string to 32 bits
+    binary = string(32 - binary.length(), '0') + binary;
     return binary;
 }
 
@@ -68,50 +80,44 @@ void readIntegersFromFile(string& filename)
 void cacheManger()
 {
     // taking the user's inputs 
-    cout << "Welcome to the cache simulator....." << endl;
-    cout << "Please enter the cache size : " << endl;
+    cout << "Welcome to the cache simulator.....";
+    cout << "Please enter the cache size : ";
     cin >> cacheSize;
-    cout << "Please enter the number of lines in the cache : " << endl;
+    cout << "Please enter the number of lines in the cache : ";
     cin >> numberLines;
     blockSize = cacheSize / numberLines;
-    cout << "Please enter the number of cycles (it must be between 1 and 10 ): " << endl;
+    cout << "Please enter the number of cycles (it must be between 1 and 10 ): ";
     cin >> numberCycles;
-    cout << "Please enter the file name that contains access aequence: " << endl;
+    cout << "Please enter the file name that contains access aequence: ";
     cin >> fileName;
     
     
     // reading the file that contains  that the used just entered
     readIntegersFromFile(fileName);
     // creating the cache table
-    vector<vector<int>> cache(numberLines, vector<int>(blockSize,0));
+    vector<string> cache(numberLines,"");
     string binary;
     numberLinesBits = log2(numberLines);
     blockSizeBits = log2(blockSize);
     int i, j;
-    print2DVector(cache);
-    while (accessSequence.size() > 0)
+    cout << setw(15) << "Tag" << setw(25) << "Line Number" << setw(10) << "Offset"<< setw(10) <<"Hit/Miss"<< endl;
+    for(int i=0;i< accessSequence.size();i++)
     {
-
-        i = accessSequence[0] % numberLines;
-        j = (accessSequence[0] / numberLines) % blockSize;
-
-       //cout << " i : " << i << "   j : " << j << endl;
-
-       if (cache[i][j] == accessSequence[0])
-       {
-           numAccess++;
-           numHit++;
-       }
-       else
-       {
-           numAccess++;
-           numMiss++;
-           cache[i][j] = accessSequence[0];
-       }
-      // cout << accessSequence[0] << endl;
-       print2DVector(cache);
-       accessSequence.erase(accessSequence.begin(), accessSequence.begin() + 1);
-       //cout << "sds" << endl;
+       // cout << accessSequence[i] << endl;
+        binary = intToBinaryString(accessSequence[i]);
+        int lineNumber = binaryToDecimal(binary.substr(32 - numberLinesBits - blockSizeBits, (32 - blockSizeBits)));
+        if (cache[lineNumber % numberLines] == "")
+        {
+            numAccess++;
+            numMiss++;
+        }
+        else
+        {
+            numAccess++;
+            numHit++;
+        }
+        printCache(binary, numberLinesBits, blockSizeBits, cache[lineNumber % numberLines] != "");
+        cache[lineNumber % numberLines] = binary;
     }
 
     cout << " the number of hits is : " << numHit << endl;

@@ -1,7 +1,9 @@
 ﻿  Cache Simulator.cpp
-D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(55,39): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(100,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(101,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(102,12): warning C4101: 'j': unreferenced local variable
-D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(102,9): warning C4101: 'i': unreferenced local variable
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(18,17): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(61,39): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(148,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(149,25): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(150,12): warning C4101: 'j': unreferenced local variable
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(150,9): warning C4101: 'i': unreferenced local variable
+D:\Semesters\Spring2023\Assembly\Cache-Simulator\Cache Simulator\Cache Simulator.cpp(273,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Cache Simulator.vcxproj -> D:\Semesters\Spring2023\Assembly\Cache-Simulator\x64\Debug\Cache Simulator.exe

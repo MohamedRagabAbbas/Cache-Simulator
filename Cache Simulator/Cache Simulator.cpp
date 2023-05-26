@@ -8,6 +8,7 @@ using namespace std;
 
 int numberLines, cacheSize, blockSize, numberCycles, numMiss = 0, numHit = 0, numAccess = 0;
 int numberLinesBits, blockSizeBits;
+int adressbits;
 string fileName;
 vector<int>accessSequenceInstruction;
 vector<int>accessSequenceData;
@@ -35,23 +36,23 @@ void print(vector<string>& cache) {
 
 void printCache(string binary, int lineBits, int blockBits, bool hit) {
     
-    cout << setw(5) << binary.substr(0, 32 - lineBits - blockBits) << setw(10)
-        << binary.substr(32 - lineBits - blockBits, lineBits) << setw(10)
-        << binary.substr(32 - blockBits);
+    cout << setw(5) << binary.substr(0, adressbits - lineBits - blockBits) << setw(10)
+        << binary.substr(adressbits - lineBits - blockBits, lineBits) << setw(10)
+        << binary.substr(adressbits - blockBits);
     string b = hit ? "hit" : "miss";
     cout << setw(10) << b << endl<< endl;
 }
 string intToBinaryString(int number) {
     if (number == 0) {
-        return string(32, '0');
+        return string(adressbits, '0');
     }
     string binary;
     while (number > 0) {
         binary = to_string(number % 2) + binary;
         number /= 2;
     }
-    // Extend the binary string to 32 bits
-    binary = string(32 - binary.length(), '0') + binary;
+    // Extend the binary string to adressbits bits
+    binary = string(adressbits - binary.length(), '0') + binary;
     return binary;
 }
 
@@ -93,7 +94,10 @@ void readIntegersFromFile(string& filename)
 void cacheManger()
 {
     // taking the user's inputs 
-    cout << "Welcome to the cache simulator.....";
+    cout << "Welcome to the cache simulator....."<<endl;
+
+    cout << "Enter the address Bits : " ;
+    cin >> adressbits;
     cout << "Please enter the cache size : ";
     cin >> cacheSize;
     while (!isValid(cacheSize))
@@ -156,29 +160,32 @@ void cacheManger()
     {
        // cout << accessSequence[i] << endl;
         binary = intToBinaryString(accessSequenceInstruction[i]);
-        int lineNumber = binaryToDecimal(binary.substr(32 - numberLinesBits - blockSizeBits, numberLinesBits));//binaryToDecimal(binary.substr(32 - numberLinesBits - blockSizeBits, (32 - blockSizeBits)));
+        int lineNumber = binaryToDecimal(binary.substr(adressbits - numberLinesBits - blockSizeBits, numberLinesBits));//binaryToDecimal(binary.substr(adressbits - numberLinesBits - blockSizeBits, (adressbits - blockSizeBits)));
         //cout << lineNumber << endl;
         bool test = 0;
         bool hit = 0;
         int k;
         int r;
-        for (int j = 0; j < x; j++)
-        {
-            numAccess++;
-            if (cacheInstruction[(lineNumber % numberLines) * x + j] != "" && binaryToDecimal(cacheInstruction[(lineNumber % numberLines) * x + j]) == accessSequenceInstruction[i])
-            {
-                numHit++;
-                hit = 1;
-                break;
-            }
-            else {
-                numMiss++; 
-            }
-        }
+        //for (int j = 0; j < x; j++)
+        //{
+        //    numAccess++;
+        //   /* int mm = (adressbits - blockSizeBits - numberLinesBits);
 
-        if (!hit) {
+        //    cout << "wwwwwwwwwwwwwwwwwwwwwwww" << (cacheInstruction[(lineNumber % numberLines)*x+j])<<"  " << mm <<endl;
+        //    if(cacheInstruction[(lineNumber % numberLines) * x + j] != "")
+        //        cout << "sdafsdf" << cacheInstruction[(lineNumber % numberLines) * x + j].substr(0,mm) << "   " << intToBinaryString(accessSequenceInstruction[i]).substr(0, mm) << endl;*/
+
+        //}
+
+       
             for (int j = 0; j < x; j++)
             {
+                if (cacheInstruction[(lineNumber % numberLines) * x + j] != "" && cacheInstruction[(lineNumber % numberLines) * x + j].substr(0, adressbits - blockSizeBits) == intToBinaryString(accessSequenceInstruction[i]).substr(0, adressbits - blockSizeBits))
+                {
+                    numHit++;
+                    hit = 1;
+                    break;
+                }
                 if (cacheInstruction[(lineNumber % numberLines) * x + j] == "")
                 {
                     test = 1;
@@ -190,11 +197,13 @@ void cacheManger()
                 cacheInstruction[(lineNumber % numberLines) * x + k] = binary;
             else
             {
-                r = rand() % x;
+                r = rand() % x;//4 
 
                 cacheInstruction[(lineNumber % numberLines) * x + r] = binary;
             }
-        }
+            if (hit == 0) numMiss++;
+            numAccess++;
+        
         printCache(binary, numberLinesBits, blockSizeBits, hit);
 
         cout << endl << endl << "====================" << endl;
@@ -202,60 +211,60 @@ void cacheManger()
         print(cacheInstruction);
         cout << endl << endl << "====================" << endl;
     }
-    cout << "Data Cache:\n";
-    cout << setw(15) << "Tag" << setw(25) << "Line Number" << setw(10) << "Offset" << setw(10) << "Hit/Miss" << endl;
+    //cout << "Data Cache:\n";
+    //cout << setw(15) << "Tag" << setw(25) << "Line Number" << setw(10) << "Offset" << setw(10) << "Hit/Miss" << endl;
 
-    numberLines /= x;
-    for (int i = 0; i < accessSequenceData.size(); i++)
-    {
-        // cout << accessSequence[i] << endl;
-        binary = intToBinaryString(accessSequenceData[i]);
-        int lineNumber = binaryToDecimal(binary.substr(32 - numberLinesBits - blockSizeBits, numberLinesBits));//binaryToDecimal(binary.substr(32 - numberLinesBits - blockSizeBits, (32 - blockSizeBits)));
-        //cout << lineNumber << endl;
-        bool test = 0;
-        bool hit = 0;
-        int k;
-        int r;
-        for (int j = 0; j < x; j++)
-        {
-            numAccess++;
-            if (cacheData[(lineNumber % numberLines) * x + j] != "" && binaryToDecimal(cacheData[(lineNumber % numberLines) * x + j]) == accessSequenceData[i])
-            {
-                numHit++;
-                hit = 1;
-                break;
-            }
-            else {
-                numMiss++;
-            }
-        }
+    ////numberLines /= x;
+    //for (int i = 0; i < accessSequenceData.size(); i++)
+    //{
+    //    // cout << accessSequence[i] << endl;
+    //    binary = intToBinaryString(accessSequenceData[i]);
+    //    int lineNumber = binaryToDecimal(binary.substr(adressbits - numberLinesBits - blockSizeBits, numberLinesBits));//binaryToDecimal(binary.substr(adressbits - numberLinesBits - blockSizeBits, (adressbits - blockSizeBits)));
+    //    //cout << lineNumber << endl;
+    //    bool test = 0;
+    //    bool hit = 0;
+    //    int k;
+    //    int r;
+    //    for (int j = 0; j < x; j++)
+    //    {
+    //        numAccess++;
+    //        if (cacheData[(lineNumber % numberLines) * x + j] != "" && cacheData[(lineNumber % numberLines) * x + j].substr(0,adressbits-blockSizeBits) == intToBinaryString(accessSequenceData[i]).substr(0, adressbits - blockSizeBits))
+    //        {
+    //            numHit++;
+    //            hit = 1;
+    //            break;
+    //        }
+    //        else {
+    //            numMiss++;
+    //        }
+    //    }
 
-        if (!hit) {
-            for (int j = 0; j < x; j++)
-            {
-                if (cacheData[(lineNumber % numberLines) * x + j] == "")
-                {
-                    test = 1;
-                    k = j;
-                    break;
-                }
-            }
-            if (test)
-                cacheData[(lineNumber % numberLines) * x + k] = binary;
-            else
-            {
-                r = rand() % x;
+    //    if (!hit) {
+    //        for (int j = 0; j < x; j++)
+    //        {
+    //            if (cacheData[(lineNumber % numberLines) * x + j] == "")
+    //            {
+    //                test = 1;
+    //                k = j;
+    //                break;
+    //            }
+    //        }
+    //        if (test)
+    //            cacheData[(lineNumber % numberLines) * x + k] = binary;
+    //        else
+    //        {
+    //            r = rand() % x;
 
-                cacheData[(lineNumber % numberLines) * x + r] = binary;
-            }
-        }
-        printCache(binary, numberLinesBits, blockSizeBits, hit);
+    //            cacheData[(lineNumber % numberLines) * x + r] = binary;
+    //        }
+    //    }
+    //    printCache(binary, numberLinesBits, blockSizeBits, hit);
 
-        cout << endl << endl << "====================" << endl;
-        cout << "Data Cache:\n";
-        print(cacheData);
-        cout << endl << endl << "====================" << endl;
-    }
+    //    cout << endl << endl << "====================" << endl;
+    //    cout << "Data Cache:\n";
+    //    print(cacheData);
+    //    cout << endl << endl << "====================" << endl;
+    //}
     cout << " the number of hits is : " << numHit << endl;
     cout << " the number of Miss is : " << numMiss << endl;
     cout << " the number of Access is : " << numAccess << endl;
@@ -264,8 +273,8 @@ void cacheManger()
     cout << " the AMAT is: " << numberCycles + ((numMiss * 1.0) / numAccess) * 100 << "\n";
     cout << "Instruction Cache:\n";
     print(cacheInstruction);
-    cout << "Data Cache:\n";
-    print(cacheData);
+    //cout << "Data Cache:\n";
+    //print(cacheData);
 }
 
 int main()
